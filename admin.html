@@ -19,6 +19,25 @@
       </nav>
     </header>
 
+    <div class="sidebar">
+      <h3>System Statistics</h3>
+      <ul>
+        <li>Total Users: 10</li>
+        <li>Total Products: 50</li>
+        <li>Orders Today: 5</li>
+      </ul>
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Users</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Orders</a></li>
+      </ul>
+      <h3>Quick Actions</h3>
+      <button>Add Product</button>
+      <button>View Reports</button>
+    </div>
+
     <main>
       <div id="user-details">
         <h2>Signed-Up Users</h2>
@@ -55,6 +74,8 @@
                     <p><strong>Address:</strong> ${user.address || "N/A"}</p>
                     <h3>Wishlist:</h3>
                     <ul id="wishlist-${user.email.replace(/[@.]/g, "-")}"></ul>
+                    <button onclick="addProductToWishlist('${user.email}')">+</button>
+                    <button onclick="removeProductFromWishlist('${user.email}')">-</button>
                 `;
           userList.appendChild(userDiv);
           displayWishlistItems(user.email);
@@ -75,11 +96,47 @@
           return;
         }
 
+        wishlistList.innerHTML = ""; // Clear existing list
+
         userWishlist.forEach((item) => {
           const listItem = document.createElement("li");
-          listItem.textContent = `${item.name} - $${item.price}`;
+          listItem.innerHTML = `<img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px;"> ${item.name} - $${item.price}`;
           wishlistList.appendChild(listItem);
         });
+      }
+
+      function addProductToWishlist(userEmail) {
+        let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+        // Prompt the admin to enter the product details
+        const productName = prompt("Enter product name:");
+        const productPrice = prompt("Enter product price:");
+        const productImage = prompt("Enter product image URL:");
+
+        if (productName && productPrice && productImage) {
+          const newItem = {
+            userEmail: userEmail,
+            name: productName,
+            price: productPrice,
+            image: productImage,
+          };
+          wishlist.push(newItem);
+          localStorage.setItem("wishlist", JSON.stringify(wishlist));
+          displayWishlistItems(userEmail); // Refresh the wishlist display
+        }
+      }
+
+      function removeProductFromWishlist(userEmail) {
+        let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+        // Prompt the admin to enter the product name to remove
+        const productNameToRemove = prompt("Enter product name to remove:");
+
+        if (productNameToRemove) {
+          wishlist = wishlist.filter(
+            (item) => !(item.userEmail === userEmail && item.name === productNameToRemove)
+          );
+          localStorage.setItem("wishlist", JSON.stringify(wishlist));
+          displayWishlistItems(userEmail); // Refresh the wishlist display
+        }
       }
     </script>
   </body>
