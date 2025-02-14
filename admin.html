@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">Furniture Store</div>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="wishlist.html">Wishlist</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <div id="user-details">
+        <h2>Signed-Up Users</h2>
+        <div id="user-list">
+          <!-- User details will be displayed here -->
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Furniture Store</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", displayUserDetails);
+
+      function displayUserDetails() {
+        const userList = document.getElementById("user-list");
+        userList.innerHTML = "";
+
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        if (users.length === 0) {
+          userList.innerHTML = "<p>No users signed up yet.</p>";
+          return;
+        }
+
+        users.forEach((user) => {
+          const userDiv = document.createElement("div");
+          userDiv.classList.add("user-card");
+          userDiv.innerHTML = `
+                    <p><strong>Name:</strong> ${user.name || "N/A"}</p>
+                    <p><strong>Email:</strong> ${user.email || "N/A"}</p>
+                    <p><strong>Address:</strong> ${user.address || "N/A"}</p>
+                    <h3>Wishlist:</h3>
+                    <ul id="wishlist-${user.email.replace(/[@.]/g, "-")}"></ul>
+                `;
+          userList.appendChild(userDiv);
+          displayWishlistItems(user.email);
+        });
+      }
+
+      function displayWishlistItems(userEmail) {
+        const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+        const userWishlist = wishlist.filter(
+          (item) => item.userEmail === userEmail
+        );
+        const wishlistList = document.getElementById(
+          `wishlist-${userEmail.replace(/[@.]/g, "-")}`
+        );
+
+        if (userWishlist.length === 0) {
+          wishlistList.innerHTML = "<li>No items in wishlist</li>";
+          return;
+        }
+
+        userWishlist.forEach((item) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = `${item.name} - $${item.price}`;
+          wishlistList.appendChild(listItem);
+        });
+      }
+    </script>
+  </body>
+</html>
