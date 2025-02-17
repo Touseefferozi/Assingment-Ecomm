@@ -20,10 +20,13 @@
     </header>
 
     <main>
-        <h1>Your Wishlist</h1>
+      <center><h1>Proceed to Check out</h1></center>
         <div id="wishlist-items">
             <!-- Wishlist items will be displayed here -->
         </div>
+    <button 
+        onclick="handleCheckout()"
+    >Checkout</button>
     </main>
 
     <footer>
@@ -35,6 +38,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderWishlistItems();
         });
+ 
     </script>
 </body>
 </html>
