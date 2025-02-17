@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <header>
@@ -73,7 +74,8 @@
                     <p><strong>Email:</strong> ${user.email || "N/A"}</p>
                     <p><strong>Address:</strong> ${user.address || "N/A"}</p>
                     <h3>Wishlist:</h3>
-                    <ul id="wishlist-${user.email.replace(/[@.]/g, "-")}"></ul>
+                    <ul id="wishlist-${user.email.replace(/[@.]/g, "-")}">
+                    </ul>
                     <button onclick="addProductToWishlist('${user.email}')">+</button>
                     <button onclick="removeProductFromWishlist('${user.email}')">-</button>
                 `;
@@ -99,6 +101,7 @@
         wishlistList.innerHTML = ""; // Clear existing list
 
         userWishlist.forEach((item) => {
+          console.log("Image URL:", item.image); // Debugging
           const listItem = document.createElement("li");
           listItem.innerHTML = `<img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px;"> ${item.name} - $${item.price}`;
           wishlistList.appendChild(listItem);
@@ -121,6 +124,7 @@
           };
           wishlist.push(newItem);
           localStorage.setItem("wishlist", JSON.stringify(wishlist));
+          console.log("Wishlist after adding:", wishlist); // Debugging
           displayWishlistItems(userEmail); // Refresh the wishlist display
         }
       }
@@ -135,6 +139,7 @@
             (item) => !(item.userEmail === userEmail && item.name === productNameToRemove)
           );
           localStorage.setItem("wishlist", JSON.stringify(wishlist));
+          console.log("Wishlist after removing:", wishlist); // Debugging
           displayWishlistItems(userEmail); // Refresh the wishlist display
         }
       }

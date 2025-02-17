@@ -27,11 +27,25 @@ function addToWishlist(product) {
   }
 
   let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-  wishlist.push(product);
+
+  // Check if product already exists in the wishlist
+  const isProductInWishlist = wishlist.some(
+    (item) => item.name === product.name && item.userEmail === user.email
+  );
+
+  if (isProductInWishlist) {
+    alert("Product is already in your wishlist!");
+    return;
+  }
+
+  // Add product to wishlist
+  wishlist.push({ ...product, userEmail: user.email });
   localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
   alert("Product added to wishlist!");
   updateWishlistCount();
 }
+
 
 function updateWishlistItem(index, newName, newPrice) {
   let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
@@ -276,3 +290,4 @@ document.addEventListener("DOMContentLoaded", () => {
         // possibly using local storage or sending an AJAX request.
     });
 });*/
+
